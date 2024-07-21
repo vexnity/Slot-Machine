@@ -21,7 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 20vh;
+            height: 30vh;
             width: 80vw;
             overflow: hidden;
             border: 5px solid #d35400;
@@ -50,7 +50,7 @@
         .slider-container {
             position: relative;
             width: 80vw;
-            height: 10vh;
+            height: 5vh;
             margin-top: 2vh;
             display: flex;
             align-items: center;
@@ -60,7 +60,7 @@
             -webkit-appearance: none;
             appearance: none;
             width: 120%;
-            height: 6vh;
+            height: 8vh;
             background: #e74c3c;
             outline: none;
             opacity: 0.7;
@@ -102,14 +102,35 @@
             color: #fff;
             text-shadow: 1px 1px #333;
         }
+        #fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        #fullscreen-btn:focus {
+            outline: none;
+        }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@latest/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="reel-container">
-        <div id="reel1" class="reel" style="animation-delay: 0s;">
+        <div id="reel1" class="reel">
             <span>💎</span><span>🍒</span><span>🍋</span><span>🔔</span><span>🍫</span><span>🍇</span><span>🍉</span>
             <span>💎</span><span>🍒</span><span>🍋</span><span>🔔</span><span>🍫</span><span>🍇</span><span>🍉</span>
         </div>
@@ -127,115 +148,155 @@
         <div class="pull-to-win">PULL TO WIN</div>
     </div>
     <div id="result" class="result"></div>
+    <button id="fullscreen-btn">🗖</button>
 
-<script>
-    const miniJackpotCombos = [
-        ["💎", "💎", "🍒"],
-        ["🍒", "🍒", "💎"],
-        ["🍋", "🔔", "🔔"],
-        ["🔔", "🔔", "🍋"],
-        ["🍫", "🍫", "🍇"],
-        ["🍇", "🍇", "🍫"],
-        ["🍉", "🍉", "🍒"]
-    ];
+    <script>
+        const miniJackpotCombos = [
+            ["💎", "💎", "🍒"],
+            ["🍒", "🍒", "💎"],
+            ["🍋", "🔔", "🔔"],
+            ["🔔", "🔔", "🍋"],
+            ["🍫", "🍫", "🍇"],
+            ["🍇", "🍇", "🍫"],
+            ["🍉", "🍉", "🍒"]
+        ];
 
-    const megaJackpotCombos = [
-        ["💎", "💎", "💎"],
-        ["🍒", "🍒", "🍒"],
-        ["🍋", "🍋", "🍋"],
-        ["🔔", "🔔", "🔔"],
-        ["🍫", "🍫", "🍫"],
-        ["🍇", "🍇", "🍇"],
-        ["🍉", "🍉", "🍉"]
-    ];
+        const megaJackpotCombos = [
+            ["💎", "💎", "💎"],
+            ["🍒", "🍒", "🍒"],
+            ["🍋", "🍋", "🍋"],
+            ["🔔", "🔔", "🔔"],
+            ["🍫", "🍫", "🍫"],
+            ["🍇", "🍇", "🍇"],
+            ["🍉", "🍉", "🍉"]
+        ];
 
-    const lossCombos = [
-        ["💎", "🍒", "🍋"],
-        ["🍒", "🍋", "💎"],
-        ["🍋", "💎", "🔔"],
-        ["🔔", "🍫", "🍇"],
-        ["🍫", "🍇", "🍉"],
-        ["🍇", "🍉", "🍒"],
-        ["🍉", "💎", "🔔"]
-    ];
+        const lossCombos = [
+            ["💎", "🍒", "🍋"],
+            ["🍒", "🍋", "💎"],
+            ["🍋", "💎", "🔔"],
+            ["🔔", "🍫", "🍇"],
+            ["🍫", "🍇", "🍉"],
+            ["🍇", "🍉", "🍒"],
+            ["🍉", "💎", "🔔"]
+        ];
 
-    let isSpinning = false;
+        let isSpinning = false;
 
-    document.getElementById('slider').addEventListener('input', (event) => {
-        if (event.target.value == 100 && !isSpinning) {
-            isSpinning = true;
-            spin();
-        }
-    });
-
-    function spin() {
-        document.getElementById('result').textContent = '';
-        const randomNumber = Math.floor(Math.random() * 1000) + 1;
-        let selectedCombo;
-
-        if (randomNumber <= 1000) {
-            selectedCombo = miniJackpotCombos[Math.floor(Math.random() * miniJackpotCombos.length)];
-        } else if (randomNumber => 1000 ) {
-            selectedCombo = megaJackpotCombos[Math.floor(Math.random() * megaJackpotCombos.length)];
-        } else {
-            selectedCombo = lossCombos[Math.floor(Math.random() * lossCombos.length)];
-        }
-
-        animateReel('reel1', selectedCombo[0], 0, () => {
-            animateReel('reel2', selectedCombo[1], 300, () => {
-                animateReel('reel3', selectedCombo[2], 600, checkWin.bind(null, selectedCombo));
-            });
+        document.getElementById('slider').addEventListener('input', (event) => {
+            if (event.target.value == 100 && !isSpinning) {
+                isSpinning = true;
+                spin();
+            }
         });
 
-        resetSlider();
-    }
+        function spin() {
+            document.getElementById('result').textContent = '';
+            const randomNumber = Math.floor(Math.random() * 1000) + 1;
+            let selectedCombo;
 
-    function animateReel(reelId, finalEmoji, delay, callback) {
-        const reel = document.getElementById(reelId);
-        reel.style.animation = `scroll 1s infinite linear ${delay}ms`;
+            if (randomNumber <= 1000) {
+                selectedCombo = miniJackpotCombos[Math.floor(Math.random() * miniJackpotCombos.length)];
+            } else if (randomNumber > 1000) {
+                selectedCombo = megaJackpotCombos[Math.floor(Math.random() * megaJackpotCombos.length)];
+            } else {
+                selectedCombo = lossCombos[Math.floor(Math.random() * lossCombos.length)];
+            }
 
-        setTimeout(() => {
-            reel.style.animation = 'none';
-            reel.innerHTML = `<span>${finalEmoji}</span>`;
-            callback();
-        }, 1000 + delay);
-    }
+            animateReel('reel1', selectedCombo[0], 0, () => {
+                animateReel('reel2', selectedCombo[1], 300, () => {
+                    animateReel('reel3', selectedCombo[2], 600, checkWin.bind(null, selectedCombo));
+                });
+            });
 
-    function checkWin(selectedCombo) {
-        const resultElement = document.getElementById('result');
-        let waitTime;
-
-        if (selectedCombo[0] === selectedCombo[1] && selectedCombo[0] === selectedCombo[2]) {
-            resultElement.textContent = '🎉 You Win the Mega Jackpot! 🎉';
-            waitTime = 5000;
-        } else if (selectedCombo[0] === selectedCombo[1] || selectedCombo[1] === selectedCombo[2] || selectedCombo[0] === selectedCombo[2]) {
-            resultElement.textContent = '🎉 You Win a Mini Jackpot! 🎉';
-            waitTime = 1000;
-        } else {
-            resultElement.textContent = 'Try Again!';
-            waitTime = 5000;
+            resetSlider();
         }
 
-        setTimeout(() => {
-            location.reload(); // Refresh the page after the specified wait time
-        }, waitTime);
+        function animateReel(reelId, finalEmoji, delay, callback) {
+            const reel = document.getElementById(reelId);
+            reel.style.animation = `scroll 1s infinite linear ${delay}ms`;
 
-        isSpinning = false;
-    }
+            setTimeout(() => {
+                reel.style.animation = 'none';
+                reel.innerHTML = `<span>${finalEmoji}</span>`;
+                callback();
+            }, 1000 + delay);
+        }
 
-    function resetSlider() {
-        const slider = document.getElementById('slider');
-        let sliderValue = 100;
-        const sliderResetInterval = setInterval(() => {
-            if (sliderValue > 0) {
-                sliderValue -= 1;
-                slider.value = sliderValue;
+        function checkWin(selectedCombo) {
+            const resultElement = document.getElementById('result');
+            let waitTime;
+
+            if (selectedCombo[0] === selectedCombo[1] && selectedCombo[0] === selectedCombo[2]) {
+                resultElement.textContent = '🎉 You Win the Mega Jackpot! 🎉';
+                waitTime = 10000; // 10 seconds for Mega Jackpot
+                triggerConfetti(); // Trigger confetti
+            } else if (selectedCombo[0] === selectedCombo[1] || selectedCombo[1] === selectedCombo[2] || selectedCombo[0] === selectedCombo[2]) {
+                resultElement.textContent = '🎉 You Win a Mini Jackpot! 🎉';
+                waitTime = 10000; // 10 seconds for Mini Jackpot
+                triggerConfetti(); // Trigger confetti
             } else {
-                clearInterval(sliderResetInterval);
+                resultElement.textContent = 'Try Again!';
+                waitTime = 10000; // 10 seconds for Loss
             }
-        }, 20);
-    }
-</script>
+
+            setTimeout(() => {
+                refreshReels();
+            }, waitTime);
+
+            isSpinning = false;
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 8000,
+                spread: 180,
+                angle: 90,
+                origin: { y: 2 }, // Confetti starts from the bottom of the screen
+                startVelocity: 180,
+                gravity: 1,
+                ticks: 600,
+            });
+        }
+
+        function refreshReels() {
+            const reels = ['reel1', 'reel2', 'reel3'];
+            reels.forEach((reelId, index) => {
+                const reel = document.getElementById(reelId);
+                reel.style.animation = 'none';
+                reel.innerHTML = `
+                    <span>💎</span><span>🍒</span><span>🍋</span><span>🔔</span><span>🍫</span><span>🍇</span><span>🍉</span>
+                    <span>💎</span><span>🍒</span><span>🍋</span><span>🔔</span><span>🍫</span><span>🍇</span><span>🍉</span>
+                `;
+                setTimeout(() => {
+                    reel.style.animation = `scroll 1s infinite linear ${index * 300}ms`;
+                }, index * 300);
+            });
+
+            document.getElementById('result').textContent = '';
+        }
+
+        function resetSlider() {
+            const slider = document.getElementById('slider');
+            let sliderValue = 100;
+            const sliderResetInterval = setInterval(() => {
+                if (sliderValue > 0) {
+                    sliderValue -= 1;
+                    slider.value = sliderValue;
+                } else {
+                    clearInterval(sliderResetInterval);
+                }
+            }, 20);
+        }
+
+        document.getElementById('fullscreen-btn').addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        });
+    </script>
 
 </body>
 </html>
