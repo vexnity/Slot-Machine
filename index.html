@@ -233,11 +233,11 @@
                 triggerConfetti(); // Trigger confetti
             } else if (selectedCombo[0] === selectedCombo[1] || selectedCombo[1] === selectedCombo[2] || selectedCombo[0] === selectedCombo[2]) {
                 resultElement.textContent = '🎉 You Win a Mini Jackpot! 🎉';
-                waitTime = 10000; // 10 seconds for Mini Jackpot
+                waitTime = 5000; // 10 seconds for Mini Jackpot
                 triggerConfetti(); // Trigger confetti
             } else {
                 resultElement.textContent = 'Try Again!';
-                waitTime = 10000; // 10 seconds for Loss
+                waitTime =3000; // 10 seconds for Loss
             }
 
             setTimeout(() => {
