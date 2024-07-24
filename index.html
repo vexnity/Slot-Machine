@@ -195,9 +195,9 @@
             const randomNumber = Math.floor(Math.random() * 1000) + 1;
             let selectedCombo;
 
-            if (randomNumber <= 1000) {
+            if (randomNumber >= 300) {
                 selectedCombo = miniJackpotCombos[Math.floor(Math.random() * miniJackpotCombos.length)];
-            } else if (randomNumber > 1000) {
+            } else if (randomNumber <= 1000) {
                 selectedCombo = megaJackpotCombos[Math.floor(Math.random() * megaJackpotCombos.length)];
             } else {
                 selectedCombo = lossCombos[Math.floor(Math.random() * lossCombos.length)];
